@@ -1,0 +1,27 @@
+.* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+.task-list__item-tools {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-list__item {
+    border-radius: 5px;
+    border: 1px solid rgba(200, 200, 200, 0.75);
+    background-color: white;
+}
+
+.text-striked {
+    text-decoration: line-through;
+}
+
+.task-list,
+.new-task {
+    margin: 0 auto;
+}
