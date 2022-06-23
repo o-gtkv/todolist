@@ -37,9 +37,8 @@ function setupItemListTools(id) {
         const completedDOM = document.getElementById(`task-list__completed${id}`)
         axios({
             method: 'put',
-            url: 'http://localhost:3000/tasks/save',
+            url: `http://localhost:3000/tasks/save?id=${id}`,
             data: {
-                id,
                 completed: completedDOM.checked
             }
         })
@@ -48,10 +47,7 @@ function setupItemListTools(id) {
     deleteDOM.addEventListener('click', async () => {
         await axios({
             method: 'delete',
-            url: 'http://localhost:3000/tasks/delete',
-            data: {
-                id
-            }
+            url: `http://localhost:3000/tasks/delete?id=${id}`,
         })
         const itemDOM = document.getElementById(`task-list__item${id}`)
         itemDOM.remove()
@@ -75,6 +71,7 @@ taskAddDOM.addEventListener('click', async () => {
         }
     })
     addTaskToList(res.data)
+    taskTextDOM.value = ''
 })
 
 window.addEventListener('load', async () => {

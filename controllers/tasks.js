@@ -6,12 +6,12 @@ const getTasks = async (req, res) => {
 }
 
 const saveTask = async (req, res) => {
-    await taskModel.findOneAndUpdate({ _id: req.body.id }, { completed: req.body.completed })
+    await taskModel.findOneAndUpdate({ _id: req.query.id }, { completed: req.body.completed })
     res.end()
 }
 
 const deleteTask = async (req, res) => {
-    await taskModel.deleteOne({ _id: req.body.id })
+    await taskModel.deleteOne({ _id: req.query.id })
     res.end()
 }
 
