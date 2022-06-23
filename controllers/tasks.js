@@ -5,12 +5,14 @@ const getTasks = async (req, res) => {
     res.json(tasks)
 }
 
-const saveTask = (req, res) => {
-
+const saveTask = async (req, res) => {
+    await taskModel.findOneAndUpdate({ _id: req.body.id }, { completed: req.body.completed })
+    res.end()
 }
 
-const deleteTask = (req, res) => {
-
+const deleteTask = async (req, res) => {
+    await taskModel.deleteOne({ _id: req.body.id })
+    res.end()
 }
 
 const addTask = async (req, res) => {
