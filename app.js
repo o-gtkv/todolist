@@ -4,19 +4,20 @@ const path = require('path')
 const handlebars = require('express-handlebars')
 const mongoose = require('mongoose')
 const taskRouter = require('./routes/tasks')
+const userRouter = require('./routes/user')
 const bodyParser = require('body-parser')
 
 const app = express()
 
-app.set('port', process.env.PORT || 3000)
-
-app.use(express.static(path.join(__dirname, 'public')))
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
+app.set('port', process.env.PORT || 3000)
 
+app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
-app.use('/tasks', taskRouter)
+app.use('/api/tasks', taskRouter)
+app.use('/api/user', userRouter)
 
 app.get('/', async (req, res) => {
     res.render('home')

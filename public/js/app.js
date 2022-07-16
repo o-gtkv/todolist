@@ -1,9 +1,14 @@
+function mapUrl(path) {
+    baseUrl = 'http://localhost:3000'
+    return baseUrl + path
+}
+
 const todoTaskListDOM = document.getElementsByClassName('task-list')[0]
 
 function todoListItem(id, task, completed) {
     return `
     <div class="task-list__item mt-3 p-3" id="task-list__item${id}" data-task-id="${id}">
-        <div class="task-list__task ${completed ? 'text-striked' : ''}">${task}</div>
+        <div class="task-list__task ${completed ? 'text-striked' : ''}" id="task-list__task${id}">${task}</div>
         <div class="task-list__item-tools">
             <div style="display: flex; align-items: flex-end">
                 <div>
@@ -37,7 +42,7 @@ function setupItemListTools(id) {
         const completedDOM = document.getElementById(`task-list__completed${id}`)
         axios({
             method: 'put',
-            url: `http://localhost:3000/tasks/save?id=${id}`,
+            url: mapUrl(`/api/tasks/save?id=${id}`),
             data: {
                 completed: completedDOM.checked
             }
@@ -47,7 +52,7 @@ function setupItemListTools(id) {
     deleteDOM.addEventListener('click', async () => {
         await axios({
             method: 'delete',
-            url: `http://localhost:3000/tasks/delete?id=${id}`,
+            url: mapUrl(`/api/tasks/delete?id=${id}`),
         })
         const itemDOM = document.getElementById(`task-list__item${id}`)
         itemDOM.remove()
@@ -55,16 +60,21 @@ function setupItemListTools(id) {
 }
 
 function addTaskToList(task) {
-    todoTaskListDOM.innerHTML += '\n' + todoListItem(task._id, task.task, task.completed)
+    todoTaskListDOM.insertAdjacentHTML('beforeend', todoListItem(task._id, task.task, task.completed))
     setupItemListTools(task._id)
+    const completedDOM = document.getElementById(`task-list__completed${task._id}`)
+    completedDOM.addEventListener('click', () => {
+        const textDOM = document.getElementById(`task-list__task${task._id}`)
+        textDOM.classList.toggle('text-striked')
+    })
 }
 
 const taskAddDOM = document.getElementsByClassName('new-task__add')[0]
-taskAddDOM.addEventListener('click', async () => {
+taskAddDOM.addEventListener('click', async (e) => {
     const taskTextDOM = document.getElementsByClassName('new-task__text')[0]
     const res = await axios({
         method: 'post',
-        url: 'http://localhost:3000/tasks/add',
+        url: mapUrl('/api/tasks/add'),
         data: {
             task: taskTextDOM.value,
             completed: false
@@ -77,14 +87,12 @@ taskAddDOM.addEventListener('click', async () => {
 window.addEventListener('load', async () => {
     const res = await axios({
         method: 'get',
-        url: 'http://localhost:3000/tasks'
+        url: mapUrl('/api/tasks')
     })
     todoTaskListDOM.innerHTML = todoList(res.data)
 
     const taskIsCompleteCollectionDOM = document.getElementsByClassName('task-list__completed')
     const taskTextCollectionDOM = document.getElementsByClassName('task-list__task')
-    // const taskDeleteCollectionDOM = document.getElementsByClassName('task-list__delete')
-
     for (let i = 0; i < taskIsCompleteCollectionDOM.length; ++i) {
         taskIsCompleteCollectionDOM.item(i).addEventListener('click', () => {
             taskTextCollectionDOM.item(i).classList.toggle('text-striked')
